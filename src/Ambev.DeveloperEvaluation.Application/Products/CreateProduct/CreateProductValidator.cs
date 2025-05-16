@@ -15,15 +15,18 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
         /// <listheader>The validation includes checking:</listheader>
         /// <list type="bullet">Title: Required, must be between 3 and 100 characters</list>
         /// <list type="bullet">Description: Required, must be between 3 and 300 characters</list>
-        /// <list type="bullet">Price: Must be greater than zero</list>
+        /// <list type="bullet">Price: Required, must be greater than zero</list>
         /// <list type="bullet">Image: Required, must be between 3 and 100 characters</list>
         /// <list type="bullet">Rating: Must be not null</list>
+        /// <list type="bullet">Rating: Required, must be not null</list>
+        /// <list type="bullet">Category name: Required, must be between 3 and 100 characters</list>
         /// </remarks>
         public CreateProductValidator()
         {
             RuleFor(product => product.Title).NotEmpty().Length(3, 100);
             RuleFor(product => product.Description).NotEmpty().Length(3, 300);
             RuleFor(product => product.Price).GreaterThan(0);
+            RuleFor(product => product.CategoryName).NotEmpty().Length(3, 100);
 
             RuleFor(product => product.Image)
                 .NotEmpty()

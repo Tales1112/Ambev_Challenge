@@ -59,7 +59,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// <summary>
         /// Gets the product's category.
         /// </summary>
-        public virtual Category Category { get; private set; }
+        public virtual Category Category { get; set; }
 
         /// <summary>
         /// Change product info.
@@ -85,6 +85,14 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             Category = category;
             UpdatedAt = DateTime.UtcNow;
         }
+
+        /// <summary>
+        /// Indicates if category name is the same of associated with the product.
+        /// </summary>
+        /// <param name="categoryName">Name of category.</param>
+        /// <returns>True case product already this category name, false otherwise.</returns>
+        public bool SameCategoryName(string categoryName) =>
+            Category?.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase) ?? false;
 
         /// <summary>
         /// Performs validation of the user entity using the <see cref="ProductValidator"/> rules.

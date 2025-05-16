@@ -8,6 +8,12 @@ namespace Ambev.DeveloperEvaluation.Domain.Repositories
     public interface ICategoryRepository
     {
         /// <summary>
+        /// Creates a new category in the repository.
+        /// </summary>
+        /// <param name="category">The category to create</param>
+        void Create(Category category);
+
+        /// <summary>
         /// Retrieves a category by their name.
         /// </summary>
         /// <param name="name">The name to search for</param>

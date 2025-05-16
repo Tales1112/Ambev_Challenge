@@ -41,14 +41,16 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         public async Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Products
-                .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+                                .Include(p => p.Category)
+                                .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
         }
 
         /// <inheritdoc/>
         public async Task<Product?> GetByTitleAsync(string name, CancellationToken cancellationToken = default)
         {
             return await _context.Products
-                .FirstOrDefaultAsync(u => u.Title == name, cancellationToken);
+                                 .Include(p => p.Category)
+                                 .FirstOrDefaultAsync(u => u.Title == name, cancellationToken);
         }
 
         /// <inheritdoc/>

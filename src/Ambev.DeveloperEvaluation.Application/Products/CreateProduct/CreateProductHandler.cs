@@ -13,6 +13,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
     public class CreateProductHandler : IRequestHandler<CreateProductCommand, CreateProductResult>
     {
         private readonly IProductRepository _productRepository;
+        private readonly EnsureCategoryService _ensureCategoryService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
@@ -24,10 +25,12 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
         /// <param name="mapper">The AutoMapper instance</param>
         public CreateProductHandler(
             IProductRepository productRepository,
+            EnsureCategoryService ensureCategoryService,
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
             _productRepository = productRepository;
+            _ensureCategoryService = ensureCategoryService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -51,6 +54,8 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
                 throw new InvalidOperationException($"Product with title {command.Title} already exists.");
 
             var product = _mapper.Map<Product>(command);
+
+            product.Category = await _ensureCategoryService.EnsureCategoryNameAsync(command.CategoryName, cancellationToken);
 
             _productRepository.Create(product);
             await _unitOfWork.ApplyChangesAsync(cancellationToken);
