@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Ambev.DeveloperEvaluation.Application.Carts.CancelCart;
+using AutoMapper;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Carts.CancelCart
 {

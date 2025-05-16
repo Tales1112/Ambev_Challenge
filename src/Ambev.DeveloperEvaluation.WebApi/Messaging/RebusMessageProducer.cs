@@ -1,5 +1,6 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Events;
 using Rebus.Bus;
+using System.Text.Json;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Messaging
 {
