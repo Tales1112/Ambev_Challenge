@@ -7,6 +7,9 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
 {
+    /// <summary>
+    /// Handler for processing <see cref="CreateProductCommand"/> requests.
+    /// </summary>
     public class CreateProductHandler : IRequestHandler<CreateProductCommand, CreateProductResult>
     {
         private readonly IProductRepository _productRepository;
