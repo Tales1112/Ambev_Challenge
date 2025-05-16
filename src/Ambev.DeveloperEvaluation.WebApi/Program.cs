@@ -7,6 +7,7 @@ using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Middleware;
 using Ambev.DeveloperEvaluation.WebApi.Startups;
 using Microsoft.EntityFrameworkCore;
+using Rebus.Config;
 using Serilog;
 using System.Text.Json.Serialization;
 
