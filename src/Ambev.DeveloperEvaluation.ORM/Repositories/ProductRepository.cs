@@ -54,9 +54,21 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<PaginationQueryResult<Product>> PaginateAsync(PaginationQuery query, CancellationToken cancellationToken = default)
+        public async Task<PaginationQueryResult<Product>> PaginateAsync(PaginationQuery paging, CancellationToken cancellationToken = default)
         {
-            return await _context.Products.ToPaginateAsync(query, cancellationToken);
+            return await _context.Products.AsNoTracking()
+                                          .Include(p => p.Category)
+                                          .ToPaginateAsync(paging, cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public async Task<PaginationQueryResult<Product>> SearchPaginatedByCategoryNameAsync(string categoryName, PaginationQuery paging, CancellationToken cancellationToken)
+        {
+            return await _context.Products
+                .AsNoTracking()
+                .Include(p => p.Category)
+                .Where(p => EF.Functions.ILike(p.Category.Name, categoryName))
+                .ToPaginateAsync(paging, cancellationToken);
         }
     }
 }
