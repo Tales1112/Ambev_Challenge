@@ -76,3 +76,4 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             };
         }
     }
+}
