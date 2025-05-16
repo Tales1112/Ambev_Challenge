@@ -3,6 +3,8 @@ using Ambev.DeveloperEvaluation.Common.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Domain.Services;
+using Ambev.DeveloperEvaluation.Domain.Specifications;
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
