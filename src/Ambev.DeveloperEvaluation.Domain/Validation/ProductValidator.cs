@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Domain.Validation
 {
-    public class ProductValidator : AbstractValidator<Product>
+    internal class ProductValidator : AbstractValidator<Product>
     {
         public ProductValidator()
         {
