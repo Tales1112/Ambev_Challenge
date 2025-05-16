@@ -1,5 +1,7 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Common.Repositories.Pagination;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.ORM.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories
@@ -20,24 +22,14 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             _context = context;
         }
 
-        /// <summary>
-        /// Creates a new product in the database
-        /// </summary>
-        /// <param name="product">The product to create</param>
-        /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public void Create(Product product)
         {
             _context.Products.Add(product);
         }
 
 
-        /// <summary>
-        /// Deletes a product from the database
-        /// </summary>
-        /// <param name="id">The unique identifier of the product to delete</param>
-        /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public void Delete(Guid id)
         {
             var product = new Product { Id = id };
@@ -45,41 +37,24 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             _context.Products.Remove(product);
         }
 
-        /// <summary>
-        /// Retrieves a product by their unique identifier
-        /// </summary>
-        /// <param name="id">The unique identifier of the product</param>
-        /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>The product if found, null otherwise</returns>
+        /// <inheritdoc/>
         public async Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Products
                 .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
         }
 
-        /// <summary>
-        /// Retrieves a product by their name identifier
-        /// </summary>
-        /// <param name="id">The name identifier of the product</param>
-        /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>The product if found, null otherwise</returns>
+        /// <inheritdoc/>
         public async Task<Product?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
         {
             return await _context.Products
                 .FirstOrDefaultAsync(u => u.Name == name, cancellationToken);
         }
 
-        /// <summary>
-        /// Retrieves all products by their name match
-        /// </summary>
-        /// <param name="id">The name identifier of the product</param>
-        /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>The product is matched, null otherwise</returns>
-        public async Task<ICollection<Product>> GetAllAsync(string name, CancellationToken cancellationToken = default)
+        /// <inheritdoc/>
+        public async Task<PaginationQueryResult<Product>> PaginateAsync(PaginationQuery query, CancellationToken cancellationToken = default)
         {
-            return await _context.Products
-                .Where(o => EF.Functions.ILike(o.Name, $"%{name}%"))
-                .ToArrayAsync(cancellationToken);
+            return await _context.Products.ToPaginateAsync(query, cancellationToken);
         }
     }
 }

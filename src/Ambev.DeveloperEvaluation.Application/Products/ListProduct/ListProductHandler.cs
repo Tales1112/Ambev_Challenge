@@ -34,12 +34,8 @@ namespace Ambev.DeveloperEvaluation.Application.Products.ListProduct
         /// <returns>The product details if found</returns>
         public async Task<ListProductResult> Handle(ListProductCommand request, CancellationToken cancellationToken)
         {
-            var products = await _productRepository.GetAllAsync(request.Name, cancellationToken);
-
-            return new ListProductResult
-            {
-                Products = _mapper.Map<ProductResult[]>(products),
-            };
+            var paginationResult = await _productRepository.PaginateAsync(request, cancellationToken);
+            return _mapper.Map<ListProductResult>(paginationResult);
         }
     }
 }

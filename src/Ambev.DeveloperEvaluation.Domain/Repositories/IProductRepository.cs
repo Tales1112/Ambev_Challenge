@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Common.Repositories.Pagination;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 
 namespace Ambev.DeveloperEvaluation.Domain.Repositories
 {
@@ -37,11 +38,11 @@ namespace Ambev.DeveloperEvaluation.Domain.Repositories
         Task<Product?> GetByNameAsync(string name, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Retrieves all products that contain the name.
+        /// Retrieves all paginated products.
         /// </summary>
-        /// <param name="name">The name of the product</param>
+        /// <param name="query">Query to paginate</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>The list of products</returns>
-        Task<ICollection<Product>> GetAllAsync(string name, CancellationToken cancellationToken = default);
+        /// <returns>The list of paginated products</returns>
+        Task<PaginationQueryResult<Product>> PaginateAsync(PaginationQuery query,CancellationToken cancellationToken = default);
     }
 }
