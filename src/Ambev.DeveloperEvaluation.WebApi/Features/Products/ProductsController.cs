@@ -129,7 +129,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
             var command = _mapper.Map<UpdateProductCommand>(request);
             var response = await _mediator.Send(command, cancellationToken);
 
-            return Ok(_mapper.Map<ProductResponse>(response), "Product updated successfull
+            return Ok(_mapper.Map<ProductResponse>(response), "Product updated successfull");
         }
 
         /// <summary>
