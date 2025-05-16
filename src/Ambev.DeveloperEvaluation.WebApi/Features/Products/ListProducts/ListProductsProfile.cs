@@ -7,14 +7,14 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProducts
     /// <summary>
     /// Profile for mapping between Application and API ListProduct responses.
     /// </summary>
-    public class ListProductProfile : Profile
+    public class ListProductsProfile : Profile
     {
         /// <summary>
         /// Initializes the mappings for ListProduct feature.
         /// </summary>
-        public ListProductProfile()
+        public ListProductsProfile()
         {
-            CreateMap<ListProductRequest, ListProductCommand>();
+            CreateMap<ListProductsRequest, ListProductCommand>();
             CreateMap<ProductResult, ProductResponse>();
         }
     }

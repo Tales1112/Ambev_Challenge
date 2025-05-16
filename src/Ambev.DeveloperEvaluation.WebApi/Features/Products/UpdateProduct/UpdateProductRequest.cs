@@ -36,5 +36,21 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.UpdateProduct
         /// Gets the product's rating.
         /// </summary>
         public Rating Rating { get; set; } = default!;
+
+        /// <summary>
+        /// Gets the product's category name.
+        /// </summary>
+        public string Category { get; set; } = default!;
+
+        /// <summary>
+        /// Associate id to request.
+        /// </summary>
+        /// <param name="id">Identifier</param>
+        /// <returns>Instance <see cref="UpdateProductRequest"/> of request.</returns>
+        public UpdateProductRequest WithId(Guid id)
+        {
+            Id = id;
+            return this;
+        }
     }
 }
