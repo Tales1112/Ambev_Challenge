@@ -38,14 +38,14 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         public string Description { get; private set; }
 
         /// <summary>
-        /// Gets the stock quantity
-        /// </summary>
-        public int StockQuantity { get; private set; }
-
-        /// <summary>
         /// Gets the product's cover image.
         /// </summary>
         public string Image { get; private set; }
+
+        /// <summary>
+        /// Gets the stock quantity
+        /// </summary>
+        public int StockQuantity { get; private set; }
 
         /// <summary>
         /// Gets the date and time when the product was created.
@@ -76,14 +76,14 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// <param name="image">Image of product.</param>
         /// <param name="rating">Rating of product.</param>
         public void Change(
-            string name,
+            string title,
             decimal price,
             string description,
             string image,
             Rating rating,
             Category category)
         {
-            Title = name;
+            Title = title;
             Price = price;
             Description = description;
             Image = image;
@@ -167,6 +167,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// <listheader>The validation includes checking:</listheader>
         /// <list type="bullet">Title length</list>
         /// <list type="bullet">Description length</list>
+        /// <list type="bullet">Price amount</list>
         /// </remarks>
         public ValidationResultDetail Validate()
         {
