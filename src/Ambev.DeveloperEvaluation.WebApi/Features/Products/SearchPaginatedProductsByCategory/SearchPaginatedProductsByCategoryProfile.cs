@@ -1,4 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Application.Products.ListProduct;
+﻿using Ambev.DeveloperEvaluation.Application.Products;
 using Ambev.DeveloperEvaluation.Application.Products.SearchPaginatedProductsByCategory;
 using AutoMapper;
 

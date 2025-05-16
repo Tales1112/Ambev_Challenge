@@ -1,4 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Application.Products.CreateProduct;
+﻿using Ambev.DeveloperEvaluation.Application.Products;
+using Ambev.DeveloperEvaluation.Application.Products.CreateProduct;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using AutoMapper;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct
@@ -14,7 +16,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct
         public CreateProductProfile()
         {
             CreateMap<CreateProductRequest, CreateProductCommand>();
-            CreateMap<CreateProductResult, CreateProductResponse>();
+            CreateMap<Product, ProductResult>();
         }
     }
 }

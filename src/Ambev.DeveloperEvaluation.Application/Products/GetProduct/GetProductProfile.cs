@@ -4,7 +4,7 @@ using AutoMapper;
 namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
 {
     /// <summary>
-    /// Profile for mapping between Product entity and <see cref="GetProductResponse"/>.
+    /// Profile for mapping between Product entity and <see cref="ProductResult"/>.
     /// </summary>
     public class GetProductProfile : Profile
     {
@@ -13,7 +13,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
         /// </summary>
         public GetProductProfile()
         {
-            CreateMap<Product, GetProductResult>();
+            CreateMap<Product, ProductResult>();
         }
     }
 }

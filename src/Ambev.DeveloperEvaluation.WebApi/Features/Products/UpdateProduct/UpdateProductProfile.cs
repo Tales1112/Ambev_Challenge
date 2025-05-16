@@ -1,4 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Application.Products.UpdateProduct;
+﻿using Ambev.DeveloperEvaluation.Application.Products;
+using Ambev.DeveloperEvaluation.Application.Products.UpdateProduct;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using AutoMapper;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.UpdateProduct
@@ -15,7 +17,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.UpdateProduct
         public UpdateProductProfile()
         {
             CreateMap<UpdateProductRequest, UpdateProductCommand>();
-            CreateMap<UpdateProductResult, UpdateProductResponse>();
+            CreateMap<Product, ProductResult>();
         }
     }
 }

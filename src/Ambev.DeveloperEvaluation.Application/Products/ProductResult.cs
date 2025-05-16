@@ -1,17 +1,20 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.ValueObjects;
 
-namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
+namespace Ambev.DeveloperEvaluation.Application.Products
 {
     /// <summary>
-    /// Response model for GetProduct operation.
+    /// Result model for product operations.
     /// </summary>
-    public class GetProductResult
+    public class ProductResult
     {
         /// <summary>
         /// The unique identifier of the product.
         /// </summary>
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// The product's name.
+        /// </summary>
         public string Title { get; set; } = default!;
 
         /// <summary>
@@ -37,6 +40,6 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
         /// <summary>
         /// Gets the product's category name.
         /// </summary>
-        public string CategoryName { get; private set; } = default!;
+        public string CategoryName { get; set; } = default!;
     }
 }

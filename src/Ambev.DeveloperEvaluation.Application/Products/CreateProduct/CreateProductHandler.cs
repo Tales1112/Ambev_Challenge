@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Common.Repositories;
+﻿using Ambev.DeveloperEvaluation.Application.Products.ListProduct;
+using Ambev.DeveloperEvaluation.Common.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Services;
@@ -11,7 +12,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
     /// <summary>
     /// Handler for processing <see cref="CreateProductCommand"/> requests.
     /// </summary>
-    public class CreateProductHandler : IRequestHandler<CreateProductCommand, CreateProductResult>
+    public class CreateProductHandler : IRequestHandler<CreateProductCommand, ProductResult>
     {
         private readonly IProductRepository _productRepository;
         private readonly EnsureCategoryService _ensureCategoryService;
@@ -42,7 +43,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
         /// <param name="command">The CreateProduct command</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The created product details</returns>
-        public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
+        public async Task<ProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
             var validator = new CreateProductValidator();
             var validationResult = await validator.ValidateAsync(command, cancellationToken);
@@ -61,7 +62,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
             _productRepository.Create(product);
             await _unitOfWork.ApplyChangesAsync(cancellationToken);
 
-            return _mapper.Map<CreateProductResult>(product);
+            return _mapper.Map<ProductResult>(product);
         }
     }
 }

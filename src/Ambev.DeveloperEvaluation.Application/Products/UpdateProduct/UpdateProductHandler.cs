@@ -10,7 +10,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.UpdateProduct
     /// <summary>
     /// Handler for processing <see cref="UpdateProductCommand"/> requests.
     /// </summary>
-    public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, UpdateProductResult>
+    public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, ProductResult>
     {
         private readonly IProductRepository _productRepository;
         private readonly EnsureCategoryService _ensureCategoryService;
@@ -42,7 +42,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.UpdateProduct
         /// <param name="command">The UpdateProduct command</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The updated product details</returns>
-        public async Task<UpdateProductResult> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
+        public async Task<ProductResult> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
         {
             var validator = new UpdateProductCommandValidator();
             var validationResult = await validator.ValidateAsync(command, cancellationToken);
@@ -66,7 +66,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.UpdateProduct
             }
 
             await _unitOfWork.ApplyChangesAsync(cancellationToken);
-            return _mapper.Map<UpdateProductResult>(product);
+            return _mapper.Map<ProductResult>(product);
         }
     }
 }
