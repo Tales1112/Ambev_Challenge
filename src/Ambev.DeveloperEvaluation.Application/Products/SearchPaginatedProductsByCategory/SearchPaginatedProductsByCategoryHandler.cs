@@ -10,7 +10,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.SearchPaginatedProducts
     /// <summary>
     /// Handler for processing <see cref="SearchPaginatedProductsByCategoryCommand"/> requests.
     /// </summary>
-    internal class SearchPaginatedProductsByCategoryHandler : IRequestHandler<SearchPaginatedProductsByCategoryCommand, SearchPaginatedProductsByCategoryResult>
+    public class SearchPaginatedProductsByCategoryHandler : IRequestHandler<SearchPaginatedProductsByCategoryCommand, SearchPaginatedProductsByCategoryResult>
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
