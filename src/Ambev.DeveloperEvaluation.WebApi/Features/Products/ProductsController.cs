@@ -23,6 +23,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
     public class ProductsController : BaseController
     {
         private readonly IMediator _mediator;
