@@ -2,7 +2,6 @@
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Validation;
 using Ambev.DeveloperEvaluation.Domain.ValueObjects;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
@@ -13,7 +12,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
     public class Product : BaseEntity
     {
         /// <summary>
-        /// Initializes a new instance of the Product class.
+        /// Initializes a new instance of the <see cref="Product"/> class.
         /// </summary>
         public Product()
         {
@@ -24,65 +23,71 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// Gets the product's title.
         /// Must not be null or empty.
         /// </summary>
-        public string Title { get; set; } = string.Empty;
+        public string Title { get; private set; }
 
         /// <summary>
         /// Gets the product's full price.
         /// Must be greater than zero.
         /// </summary>
-        public decimal Price { get; set; }
-
+        public decimal Price { get; private set; }
 
         /// <summary>
         /// Gets the product's description.
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; private set; }
 
         /// <summary>
         /// Gets the product's cover image.
         /// </summary>
-        public string Image { get; set; }
+        public string Image { get; private set; }
 
         /// <summary>
         /// Gets the date and time when the product was created.
         /// </summary>
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; init; }
 
         /// <summary>
         /// Gets the date and time of the last update to the product's information.
         /// </summary>
-        public DateTime? UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; private set; }
 
         /// <summary>
         /// Gets the product's rating.
         /// </summary>
-        public Rating Rating { get; set; }
+        public Rating Rating { get; private set; }
 
         /// <summary>
-        /// Edit product info.
+        /// Gets the product's category.
         /// </summary>
-        /// <param name="name">Name of product.</param>
+        public virtual Category Category { get; private set; }
+
+        /// <summary>
+        /// Change product info.
+        /// </summary>
+        /// <param name="title">Title of product.</param>
         /// <param name="price">Price of product.</param>
         /// <param name="description">Description of product.</param>
         /// <param name="image">Image of product.</param>
         /// <param name="rating">Rating of product.</param>
-        public void Update(
+        public void Change(
             string name,
             decimal price,
             string description,
             string image,
-            Rating rating)
+            Rating rating,
+            Category category)
         {
             Title = name;
             Price = price;
             Description = description;
             Image = image;
             Rating = rating;
+            Category = category;
             UpdatedAt = DateTime.UtcNow;
         }
 
         /// <summary>
-        /// Performs validation of the user entity using the ProductValidator rules.
+        /// Performs validation of the user entity using the <see cref="ProductValidator"/> rules.
         /// </summary>
         /// <returns>
         /// A <see cref="ValidationResultDetail"/> containing:

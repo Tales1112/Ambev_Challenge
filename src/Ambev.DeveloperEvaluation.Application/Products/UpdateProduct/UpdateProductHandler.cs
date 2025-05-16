@@ -53,7 +53,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.UpdateProduct
             if (existingProduct is not null && existingProduct.Id != command.Id)
                 throw new InvalidOperationException($"Product with title {command.Title} already exists");
 
-            product.Update(command.Title, command.Price, command.Description, command.Image, command.Rating);
+            product.Change(command.Title, command.Price, command.Description, command.Image, command.Rating, null!);
 
             await _unitOfWork.ApplyChangesAsync(cancellationToken);
             return _mapper.Map<UpdateProductResult>(product);
