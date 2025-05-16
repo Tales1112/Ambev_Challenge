@@ -3,12 +3,14 @@ using Ambev.DeveloperEvaluation.Application.Products.DeleteProduct;
 using Ambev.DeveloperEvaluation.Application.Products.GetProduct;
 using Ambev.DeveloperEvaluation.Application.Products.ListAllCategoriesOfProducts;
 using Ambev.DeveloperEvaluation.Application.Products.ListProduct;
+using Ambev.DeveloperEvaluation.Application.Products.SearchPaginatedProductsByCategory;
 using Ambev.DeveloperEvaluation.Application.Products.UpdateProduct;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.DeleteProduct;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.GetProduct;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProducts;
+using Ambev.DeveloperEvaluation.WebApi.Features.Products.SearchPaginatedProductsByCategory;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.UpdateProduct;
 using AutoMapper;
 using MediatR;
@@ -55,9 +57,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
                 return BadRequest(validationResult.Errors);
 
             var command = _mapper.Map<CreateProductCommand>(request);
-            var response = await _mediator.Send(command, cancellationToken);
+            var result = await _mediator.Send(command, cancellationToken);
 
-            return Created(nameof(GetProduct), new { response.Id }, _mapper.Map<CreateProductResponse>(response), "Product created successfully");
+            return Created(nameof(GetProduct), new { result.Id }, _mapper.Map<CreateProductResponse>(result), "Product created successfully");
         }
 
         /// <summary>
@@ -80,9 +82,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
                 return BadRequest(validationResult.Errors);
 
             var command = _mapper.Map<GetProductCommand>(request.Id);
-            var response = await _mediator.Send(command, cancellationToken);
+            var result = await _mediator.Send(command, cancellationToken);
 
-            return Ok(_mapper.Map<GetProductResponse>(response), "Product retrieved successfully");
+            return Ok(_mapper.Map<GetProductResponse>(result), "Product retrieved successfully");
         }
 
         /// <summary>
@@ -166,6 +168,24 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
         {
             var listCategoriesResult = await _mediator.Send(new ListAllCategoriesOfProductsCommand(), cancellationToken);
             return Ok(listCategoriesResult, "Categories retrieved successfully");
+        }
+
+        /// <summary>
+        /// Retrieve products in a specific category.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Category list that are being used.</returns>
+        [HttpGet("category/{categoryName}")]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> SearchPaginatedProductsByCategory(SearchPaginatedProductsByCategoryRequest request, CancellationToken cancellationToken)
+        {
+            var command = _mapper.Map<SearchPaginatedProductsByCategoryCommand>(request);
+            var result = await _mediator.Send(command, cancellationToken);
+
+            var items = _mapper.Map<ICollection<ProductResponse>>(result.Items);
+
+            return OkPaginated<ProductResponse>(
+                new(items, result.TotalItems, request));
         }
     }
 }
