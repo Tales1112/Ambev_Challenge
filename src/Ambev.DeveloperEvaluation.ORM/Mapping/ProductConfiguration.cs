@@ -17,6 +17,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Mapping
             builder.Property(u => u.Description).IsRequired().HasMaxLength(300);
             builder.Property(u => u.Price).IsRequired().HasPrecision(10, 2);
             builder.Property(u => u.Image).IsRequired().HasMaxLength(100);
+            builder.Property(u => u.StockQuantity).IsRequired();
 
             builder.Property(u => u.CreatedAt).IsRequired();
             builder.Property(u => u.UpdatedAt).IsRequired(false);

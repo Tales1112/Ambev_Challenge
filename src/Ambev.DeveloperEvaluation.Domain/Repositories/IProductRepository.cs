@@ -38,6 +38,14 @@ namespace Ambev.DeveloperEvaluation.Domain.Repositories
         Task<Product?> GetByTitleAsync(string title, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Retrieve a list of products by your ids.
+        /// </summary>
+        /// <param name="ids">List of identifiers of product</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>List of product contains your ids.</returns>
+        Task<ICollection<Product>> ListByIdsAsync(Guid[] ids, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Retrieves all paginated products.
         /// </summary>
         /// <param name="paging">Info to paginate</param>
@@ -50,8 +58,8 @@ namespace Ambev.DeveloperEvaluation.Domain.Repositories
         /// </summary>
         /// <param name="categoryName"></param>
         /// <param name="paging">Info to paginate</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
-        Task<PaginationQueryResult<Product>> SearchPaginatedByCategoryNameAsync(string categoryName, PaginationQuery paging, CancellationToken cancellationToken);
+        Task<PaginationQueryResult<Product>> SearchPaginatedByCategoryNameAsync(string categoryName, PaginationQuery paging, CancellationToken cancellationToken = default);
     }
 }

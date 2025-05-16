@@ -2,6 +2,7 @@
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Validation;
 using Ambev.DeveloperEvaluation.Domain.ValueObjects;
+using Serilog;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
@@ -35,6 +36,11 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// Gets the product's description.
         /// </summary>
         public string Description { get; private set; }
+
+        /// <summary>
+        /// Gets the stock quantity
+        /// </summary>
+        public int StockQuantity { get; private set; }
 
         /// <summary>
         /// Gets the product's cover image.
@@ -93,6 +99,61 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// <returns>True case product already this category name, false otherwise.</returns>
         public bool SameCategoryName(string categoryName) =>
             Category?.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase) ?? false;
+
+        /// <summary>
+        /// Set stock quantity directly.
+        /// </summary>
+        /// <param name="quantity">Quantity to change.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Occurs when try set negative value</exception>
+        public void SetStockQuantity(int quantity)
+        {
+            if (quantity < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity must not be negative value to the change quantity.");
+            }
+
+            StockQuantity = quantity;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        /// <summary>
+        /// Decrease the product quantity in storage.
+        /// </summary>
+        /// <param name="quantity">Quantity to reduce</param>
+        /// <exception cref="ArgumentOutOfRangeException">Occurs when try set negative value</exception>
+        public void DecreaseQuantity(int quantity)
+        {
+            if (quantity <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity must be positive value to the decrease quantity.");
+            }
+
+            StockQuantity -= quantity;
+
+            if (StockQuantity < 0)
+            {
+                Log.Error("Stock quantity must not be negative in product#{Id} '{Title}', current stock: {StockQuantity}, try to decrease {quantity}.");
+                throw new DomainException($"Stock quantity must not be negative in product '{Title}'.");
+            }
+
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        /// <summary>
+        /// Increase the product quantity in storage.
+        /// </summary>
+        /// <param name="quantity">Quantity to increase</param>
+        /// <exception cref="ArgumentOutOfRangeException">Occurs when try set negative value</exception>
+        public void IncreaseQuantity(int quantity)
+        {
+            if (quantity <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity must be positive value to the increase quantity.");
+            }
+
+            StockQuantity += quantity;
+            UpdatedAt = DateTime.UtcNow;
+        }
 
         /// <summary>
         /// Performs validation of the user entity using the <see cref="ProductValidator"/> rules.

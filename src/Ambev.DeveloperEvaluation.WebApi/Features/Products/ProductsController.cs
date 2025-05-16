@@ -113,7 +113,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The created product details</returns>
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(ApiResponseWithData<UpdateProductResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponseWithData<ProductResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] UpdateProductRequest request, CancellationToken cancellationToken)
         {
@@ -129,7 +129,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
             var command = _mapper.Map<UpdateProductCommand>(request);
             var response = await _mediator.Send(command, cancellationToken);
 
-            return Ok(_mapper.Map<UpdateProductResponse>(response), "Product updated successfully");
+            return Ok(_mapper.Map<ProductResponse>(response), "Product updated successfully");
         }
 
         /// <summary>
