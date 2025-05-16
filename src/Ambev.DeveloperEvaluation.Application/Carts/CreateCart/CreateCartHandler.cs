@@ -18,7 +18,7 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
         private readonly IUserRepository _userRepository;
         private readonly IProductRepository _productRepository;
         private readonly SaleDiscountService _saleDiscountService;
-        private readonly SaleRandomNumberGenerator _saleNumberGenerator;
+        private readonly SaleRandomNumberGeneratorService _saleNumberGenerator;
         private readonly SaleLimitReachedSpecification _saleLimitReachedSpecification;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -39,7 +39,7 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
             IUserRepository userRepository,
             IProductRepository productRepository,
             SaleDiscountService saleDiscountService,
-            SaleRandomNumberGenerator saleNumberGenerator,
+            SaleRandomNumberGeneratorService saleNumberGenerator,
             SaleLimitReachedSpecification saleLimitReachedSpecification,
             IUnitOfWork unitOfWork,
             IMapper mapper)
