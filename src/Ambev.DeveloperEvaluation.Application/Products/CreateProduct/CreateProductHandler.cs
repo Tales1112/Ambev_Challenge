@@ -46,9 +46,9 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
 
-            var existingProduct = await _productRepository.GetByNameAsync(command.Name, cancellationToken);
+            var existingProduct = await _productRepository.GetByTitleAsync(command.Title, cancellationToken);
             if (existingProduct != null)
-                throw new InvalidOperationException($"Product with name {command.Name} already exists.");
+                throw new InvalidOperationException($"Product with title {command.Title} already exists.");
 
             var product = _mapper.Map<Product>(command);
 

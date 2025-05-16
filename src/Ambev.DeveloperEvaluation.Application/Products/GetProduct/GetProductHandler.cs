@@ -1,6 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
@@ -42,8 +43,13 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
                 throw new ValidationException(validationResult.Errors);
 
             var product = await _productRepository.GetByIdAsync(request.Id, cancellationToken);
-            if (product == null)
-                throw new KeyNotFoundException($"Product with ID {request.Id} not found");
+            if (product is null)
+            {
+                throw new ValidationException(
+                [
+                    new ValidationFailure(string.Empty, $"Product with ID {request.Id} not found."),
+            ]);
+            }
 
             return _mapper.Map<GetProductResult>(product);
         }
