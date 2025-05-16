@@ -1,4 +1,6 @@
-﻿namespace Ambev.DeveloperEvaluation.Domain.Events
+﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+
+namespace Ambev.DeveloperEvaluation.Domain.Events
 {
     /// <summary>
     /// Event to notify when sale was created.
@@ -11,6 +13,27 @@
         public required int TotalProducts { get; init; }
         public required decimal TotalAmount { get; init; }
         public required ICollection<SaleProduct> Products { get; init; }
+
+        public static SaleCreatedEvent CreateFrom(Cart cart)
+        {
+            return new SaleCreatedEvent
+            {
+                CartId = cart.Id,
+                CustomerId = cart.BoughtById,
+                CustomerName = cart.BoughtBy.Username,
+                TotalProducts = cart.Items.Count,
+                TotalAmount = cart.TotalSaleAmount,
+                Products = cart.Items.Select(i => new SaleProduct
+                {
+                    ProductId = i.ProductId,
+                    Title = i.Product.Title,
+                    Price = i.Product.Price,
+                    DiscountAmount = i.DiscountAmount,
+                    DiscountPercent = i.DiscountPercentage,
+                    TotalAmount = i.TotalAmount,
+                }).ToArray()
+            };
+        }
 
         public record SaleProduct
         {
