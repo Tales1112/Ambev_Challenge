@@ -51,6 +51,12 @@ or
 GET /products?_order="price desc, title"
 ```
 
+It´s possible ordering nested properties look like this:
+
+```
+GET /carts?_order="products.quantity desc, products.unitPrice asc"
+```
+
 ### Filtering
 
 Filters can be applied to list endpoints using the following query parameters:
