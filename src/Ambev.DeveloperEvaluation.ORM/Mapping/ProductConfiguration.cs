@@ -31,7 +31,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Mapping
                    .IsRequired();
 
             builder.HasOne(u => u.Category)
-                   .WithMany()
+                   .WithMany(c => c.Products)
                    .HasForeignKey("CategoryId")
                    .OnDelete(DeleteBehavior.NoAction)
                    .IsRequired();

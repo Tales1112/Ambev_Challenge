@@ -1,6 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Products.CreateProduct;
 using Ambev.DeveloperEvaluation.Application.Products.DeleteProduct;
 using Ambev.DeveloperEvaluation.Application.Products.GetProduct;
+using Ambev.DeveloperEvaluation.Application.Products.ListAllCategoriesOfProducts;
 using Ambev.DeveloperEvaluation.Application.Products.ListProduct;
 using Ambev.DeveloperEvaluation.Application.Products.UpdateProduct;
 using Ambev.DeveloperEvaluation.WebApi.Common;
@@ -87,9 +88,8 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
         /// <summary>
         /// Retrieve a list of all products.
         /// </summary>
-        /// <param name="id">The unique identifier of the product</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>The product details if found</returns>
+        /// <returns>Paginated list of products</returns>
         [HttpGet]
         [ProducesResponseType(typeof(PaginatedResponse<GetProductResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
@@ -153,6 +153,19 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
             await _mediator.Send(command, cancellationToken);
 
             return Ok("Product deleted successfully");
+        }
+
+        /// <summary>
+        /// Retrieve all product categories.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Category list that are being used.</returns>
+        [HttpGet("categories")]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteProduct(CancellationToken cancellationToken)
+        {
+            var listCategoriesResult = await _mediator.Send(new ListAllCategoriesOfProductsCommand(), cancellationToken);
+            return Ok(listCategoriesResult, "Categories retrieved successfully");
         }
     }
 }
