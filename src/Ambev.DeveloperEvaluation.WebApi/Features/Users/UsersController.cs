@@ -92,9 +92,8 @@ public class UsersController : BaseController
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteUser([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteUser(DeleteUserRequest request, CancellationToken cancellationToken)
     {
-        var request = new DeleteUserRequest { Id = id };
         var validator = new DeleteUserRequestValidator();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 

@@ -115,10 +115,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(ApiResponseWithData<ProductResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] UpdateProductRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromBody] UpdateProductRequest request, CancellationToken cancellationToken)
         {
-            if (id != request.Id)
-                return BadRequest("The request id is different from the url");
+            request.WithId(id);
 
             var validator = new UpdateProductRequestValidator();
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -129,7 +128,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
             var command = _mapper.Map<UpdateProductCommand>(request);
             var response = await _mediator.Send(command, cancellationToken);
 
-            return Ok(_mapper.Map<ProductResponse>(response), "Product updated successfully");
+            return Ok(_mapper.Map<ProductResponse>(response), "Product updated successfull
         }
 
         /// <summary>
