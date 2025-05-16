@@ -1,12 +1,12 @@
 ﻿namespace Ambev.DeveloperEvaluation.Common.Security
 {
     /// <summary>
-    /// Defines way to access current user data.
+    /// Defines a way to provide access to the current user info.
     /// </summary>
     public interface ICurrentUserAccessor
     {
         /// <summary>
-        /// Retrieves current user of the system.
+        /// Retrieves current system´s user.
         /// </summary>
         /// <returns>User of the system.</returns>
         IUser GetCurrentUser();
