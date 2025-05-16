@@ -1,9 +1,9 @@
-﻿namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
+﻿namespace Ambev.DeveloperEvaluation.Application.Products.ListProduct
 {
     /// <summary>
-    /// Response model for GetProduct operation.
+    /// Response model for ListProduct operation.
     /// </summary>
-    public class GetProductResult
+    public class ProductResult
     {
         /// <summary>
         /// The unique identifier of the product.
@@ -16,8 +16,8 @@
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        /// The ´product's price.
+        /// The product's price.
         /// </summary>
-        public double Price { get; set; }
+        public decimal Price { get; set; }
     }
 }
