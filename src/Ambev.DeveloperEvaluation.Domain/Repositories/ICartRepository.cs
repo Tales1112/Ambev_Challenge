@@ -15,12 +15,6 @@ namespace Ambev.DeveloperEvaluation.Domain.Repositories
         void Create(Cart cart);
 
         /// <summary>
-        /// Deletes a cart from the repository.
-        /// </summary>
-        /// <param name="id">The unique identifier of the cart to delete</param>
-        void Delete(Guid id);
-
-        /// <summary>
         /// Retrieves a cart by their unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the cart</param>
@@ -29,11 +23,21 @@ namespace Ambev.DeveloperEvaluation.Domain.Repositories
         Task<Cart?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Retrieves a cart by their unique identifier with active items.
+        /// </summary>
+        /// <param name="id">The unique identifier of the cart</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The cart if found, null otherwise</returns>
+        Task<Cart?> GetByIdWithActiveItemsAsync(Guid id, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Retrieves all paginated carts.
         /// </summary>
         /// <param name="paging">Info to paginate</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The list of paginated carts</returns>
-        Task<PaginationQueryResult<Cart>> PaginateAsync(PaginationQuery paging, CancellationToken cancellationToken = default);
+        Task<PaginationQueryResult<Cart>> PaginateAsync(
+            PaginationQuery paging,
+            CancellationToken cancellationToken = default);
     }
 }

@@ -46,6 +46,6 @@
         /// <remarks>
         /// True is cancelled, false otherwise.
         /// </remarks>
-        public bool IsCancelled { get; init; }
+        public bool Cancelled { get; init; }
     }
 }

@@ -23,7 +23,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Events
                 CustomerId = cart.BoughtById,
                 CustomerName = cart.BoughtBy.Username,
                 CancelledAt = cart.CancelledAt.GetValueOrDefault(),
-                CancelledBy = cart.CancelledBy.Username,
+                CancelledBy = cart.CancelledBy?.Username ?? string.Empty,
                 TotalProducts = cart.Items.Count,
                 TotalAmount = cart.TotalSaleAmount,
             };

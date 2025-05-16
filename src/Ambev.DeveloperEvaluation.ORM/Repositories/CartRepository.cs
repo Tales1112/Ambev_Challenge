@@ -1,8 +1,10 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Repositories.Pagination;
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.ORM.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories
 {
@@ -26,29 +28,23 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         }
 
         /// <inheritdoc/>
-        public void Delete(Guid id)
-        {
-            Cart cart = new()
-            {
-                Id = id,
-                SaleNumber = default,
-                SoldAt = default,
-                StoreName = default!,
-                CreatedBy = default!,
-                BoughtBy = default!,
-            };
-
-            _context.Carts.Attach(cart);
-            _context.Carts.Remove(cart);
-        }
-
-        /// <inheritdoc/>
         public async Task<Cart?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Carts
-                                 .Include(p => p.Items)
-                                 .ThenInclude(i => i.Product)
-                                 .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+                .Include(p => p.Items.Where(i => i.PurchaseStatus != PurchaseStatus.Deleted))
+                    .ThenInclude(i => i.Product)
+                .Where(c => c.PurchaseStatus != PurchaseStatus.Deleted)
+                .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public async Task<Cart?> GetByIdWithActiveItemsAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Carts
+                .Include(p => p.Items.Where(i => i.PurchaseStatus == PurchaseStatus.Created))
+                    .ThenInclude(i => i.Product)
+                .Where(c => c.PurchaseStatus != PurchaseStatus.Deleted)
+                .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -56,10 +52,16 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             PaginationQuery paging,
             CancellationToken cancellationToken = default)
         {
+            Expression<Func<Cart, IEnumerable<CartItem>>> itemsNotDeleted = p => p.Items.Where(i => i.PurchaseStatus != PurchaseStatus.Deleted);
+
+            var sortsByRelatedItems = paging.Orders.Where(s => s.Key.StartsWith(nameof(Cart.Items) + '.', StringComparison.OrdinalIgnoreCase));
+            itemsNotDeleted = itemsNotDeleted.RewriteExpressionWithOrderBy(sortsByRelatedItems);
+
             return await _context.Carts
-                                 .AsNoTracking()
-                                 .Include(p => p.Items)
-                                 .ToPaginateAsync(paging, cancellationToken);
+                .AsNoTracking()
+                .Include(itemsNotDeleted)
+                .Where(c => c.PurchaseStatus != PurchaseStatus.Deleted)
+                .ToPaginateAsync(paging, cancellationToken);
         }
     }
 }

@@ -4,18 +4,18 @@ using System.Text.Json;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Messaging
 {
-    public class SaleCancelledConsumer : IHandleMessages<SaleCancelledEvent>
+    public class ItemCancelledConsumer : IHandleMessages<ItemCancelledEvent>
     {
         private readonly ILogger _logger;
 
-        public SaleCancelledConsumer(ILogger<SaleCancelledConsumer> logger)
+        public ItemCancelledConsumer(ILogger<ItemCancelledConsumer> logger)
         {
             _logger = logger;
         }
 
-        public Task Handle(SaleCancelledEvent message)
+        public Task Handle(ItemCancelledEvent message)
         {
-            _logger.LogInformation($"Consuming SaleCancelledEvent: {JsonSerializer.Serialize(message)}");
+            _logger.LogInformation($"Consuming ItemCancelledEvent: {JsonSerializer.Serialize(message)}");
             return Task.CompletedTask;
         }
     }

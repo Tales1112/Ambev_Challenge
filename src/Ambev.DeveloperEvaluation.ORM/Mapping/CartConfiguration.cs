@@ -17,16 +17,22 @@ namespace Ambev.DeveloperEvaluation.ORM.Mapping
             builder.Property(_ => _.SaleNumber).IsRequired();
             builder.Property(_ => _.TotalSaleAmount).IsRequired();
             builder.Property(_ => _.StoreName).IsRequired().HasMaxLength(100);
-            builder.Property(_ => _.PurchaseStatus).IsRequired();
+
+            builder.Property(u => u.PurchaseStatus)
+                .HasConversion<string>()
+                .HasMaxLength(20)
+                .IsRequired();
 
             builder.Property(_ => _.SoldAt).IsRequired().HasColumnName("SaleAt");
             builder.Property(_ => _.CreatedAt).IsRequired();
             builder.Property(_ => _.UpdatedAt).IsRequired(false);
             builder.Property(_ => _.CancelledAt).IsRequired(false);
+            builder.Property(_ => _.DeletedAt).IsRequired(false);
 
             builder.HasOneAsShadow(_ => _.CreatedBy);
             builder.HasOneAsShadow(_ => _.BoughtBy);
             builder.HasOneAsShadow(_ => _.CancelledBy, required: false);
+            builder.HasOneAsShadow(_ => _.DeletedBy, required: false);
 
             builder.HasMany(_ => _.Items)
                 .WithOne()
@@ -34,6 +40,8 @@ namespace Ambev.DeveloperEvaluation.ORM.Mapping
 
             builder.HasIndex(_ => _.SaleNumber)
                 .IsUnique();
+
+            builder.Ignore(_ => _.ActiveItems);
         }
     }
 }
