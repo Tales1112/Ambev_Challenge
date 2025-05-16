@@ -1,31 +1,31 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.ValueObjects;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProducts
+namespace Ambev.DeveloperEvaluation.Application.Products
 {
     /// <summary>
-    /// API response model for a single Product.
+    /// Result model for product operations.
     /// </summary>
-    public class ProductResponse
+    public class ProductResult
     {
         /// <summary>
-        /// The unique identifier of the created product
+        /// The unique identifier of the product.
         /// </summary>
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Gets the product's title.
+        /// The product's name.
         /// </summary>
         public string Title { get; set; } = default!;
-
-        /// <summary>
-        /// Gets the product's full price.
-        /// </summary>
-        public decimal Price { get; set; }
 
         /// <summary>
         /// Gets the product's description.
         /// </summary>
         public string Description { get; set; } = default!;
+
+        /// <summary>
+        /// The product's price.
+        /// </summary>
+        public decimal Price { get; set; }
 
         /// <summary>
         /// Gets the product's cover image.
@@ -36,5 +36,10 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProducts
         /// Gets the product's rating.
         /// </summary>
         public Rating Rating { get; set; } = default!;
+
+        /// <summary>
+        /// Gets the product's category name.
+        /// </summary>
+        public string CategoryName { get; set; } = default!;
     }
 }

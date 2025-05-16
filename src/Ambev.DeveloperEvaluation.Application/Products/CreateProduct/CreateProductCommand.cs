@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Common.Validation;
+﻿using Ambev.DeveloperEvaluation.Application.Products.ListProduct;
+using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.ValueObjects;
 using MediatR;
 
@@ -11,14 +12,14 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
     /// This command is used to capture the required data for creating a product, 
     /// including name and price. 
     /// It implements <see cref="IRequest{TResponse}"/> to initiate the request 
-    /// that returns a <see cref="CreateProductResult"/>.
+    /// that returns a <see cref="ProductResult"/>.
     /// 
     /// The data provided in this command is validated using the 
     /// <see cref="CreateProductValidator"/> which extends 
     /// <see cref="AbstractValidator{T}"/> to ensure that the fields are correctly 
     /// populated and follow the required rules.
     /// </remarks>
-    public class CreateProductCommand : IRequest<CreateProductResult>
+    public class CreateProductCommand : IRequest<ProductResult>
     {
         /// <summary>
         /// Gets or sets the name of the product to be created.

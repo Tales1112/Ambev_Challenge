@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
+﻿using Ambev.DeveloperEvaluation.Application.Products.ListProduct;
+using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
@@ -9,7 +10,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
     /// <summary>
     /// Handler for processing <see cref="GetProductCommand"/> requests.
     /// </summary>
-    public class GetProductHandler : IRequestHandler<GetProductCommand, GetProductResult>
+    public class GetProductHandler : IRequestHandler<GetProductCommand, ProductResult>
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
@@ -34,7 +35,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
         /// <param name="request">The GetProduct command</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The product details if found</returns>
-        public async Task<GetProductResult> Handle(GetProductCommand request, CancellationToken cancellationToken)
+        public async Task<ProductResult> Handle(GetProductCommand request, CancellationToken cancellationToken)
         {
             var validator = new GetProductValidator();
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -51,7 +52,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
             ]);
             }
 
-            return _mapper.Map<GetProductResult>(product);
+            return _mapper.Map<ProductResult>(product);
         }
     }
 }

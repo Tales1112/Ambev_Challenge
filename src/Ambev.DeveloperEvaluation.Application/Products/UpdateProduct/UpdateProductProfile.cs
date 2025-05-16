@@ -13,7 +13,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.UpdateProduct
         /// </summary>
         public UpdateProductProfile()
         {
-            CreateMap<Product, UpdateProductResult>();
+            CreateMap<Product, ProductResult>();
         }
     }
 }
