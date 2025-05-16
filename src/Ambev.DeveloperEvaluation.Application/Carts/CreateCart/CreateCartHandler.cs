@@ -2,6 +2,7 @@
 using Ambev.DeveloperEvaluation.Common.Security;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Enums;
+using Ambev.DeveloperEvaluation.Domain.Exceptions;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Services;
 using Ambev.DeveloperEvaluation.Domain.Specifications;
@@ -120,16 +121,19 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
             return _mapper.Map<CartResult>(cart);
         }
 
-        private async Task<IEnumerable<CartItem>> CreateItemsAsync(CreateCartCommand command, User loggedUser, CancellationToken cancellationToken)
+        private async Task<IEnumerable<CartItem>> CreateItemsAsync(
+            CreateCartCommand command,
+            User loggedUser,
+            CancellationToken cancellationToken)
         {
             command.Products = command.Products
-                                    .GroupBy(p => p.ProductId)
-                                    .Select(g => new CreateCartItem
-                                    {
-                                        ProductId = g.Key,
-                                        Quantity = g.Sum(_ => _.Quantity),
-                                    })
-                                    .ToArray();
+                .GroupBy(p => p.ProductId)
+                .Select(g => new CreateCartItem
+                {
+                    ProductId = g.Key,
+                    Quantity = g.Sum(_ => _.Quantity),
+                })
+                .ToArray();
 
             var productIds = command.Products.Select(p => p.ProductId).ToArray();
             ICollection<Product> products = await _productRepository.ListByIdsAsync(productIds, cancellationToken);

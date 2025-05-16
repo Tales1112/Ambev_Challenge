@@ -1,12 +1,11 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
+﻿using Ambev.DeveloperEvaluation.Domain.Exceptions;
+using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.GetCart
 {
-
     /// <summary>
     /// Handler for processing <see cref="GetProductCommand"/> requests.
     /// </summary>
@@ -46,10 +45,7 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.GetCart
             var cart = await _cartRepository.GetByIdAsync(request.Id, cancellationToken);
             if (cart is null)
             {
-                throw new ValidationException(
-                [
-                    new ValidationFailure(string.Empty, $"Cart with ID {request.Id} was not found."),
-            ]);
+                throw new NotFoundDomainException(BusinessRuleMessages.CardNotFound(request.Id));
             }
 
             return _mapper.Map<CartResult>(cart);

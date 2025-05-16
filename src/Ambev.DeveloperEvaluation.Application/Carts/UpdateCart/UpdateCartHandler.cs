@@ -12,7 +12,7 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.UpdateCart
 {
-    // <summary>
+    /// <summary>
     /// Handler for processing <see cref="UpdateCartCommand"/> requests.
     /// </summary>
     public class UpdateCartHandler : IRequestHandler<UpdateCartCommand, CartResult>

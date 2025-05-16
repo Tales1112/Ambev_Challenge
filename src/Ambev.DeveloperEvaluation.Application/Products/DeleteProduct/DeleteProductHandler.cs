@@ -1,7 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Repositories;
+using Ambev.DeveloperEvaluation.Domain.Exceptions;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.DeleteProduct
@@ -42,16 +42,10 @@ namespace Ambev.DeveloperEvaluation.Application.Products.DeleteProduct
                 throw new ValidationException(validationResult.Errors);
 
             _productRepository.Delete(request.Id);
-
             var success = (await _unitOfWork.ApplyChangesAsync(cancellationToken)) > 0;
 
             if (!success)
-            {
-                throw new ValidationException(
-                [
-                    new ValidationFailure(string.Empty, $"Product with ID {request.Id} not found."),
-            ]);
-            }
+                throw new NotFoundDomainException(BusinessRuleMessages.ProductNotFound(request.Id));
 
             return new DeleteProductResponse { Success = true };
         }

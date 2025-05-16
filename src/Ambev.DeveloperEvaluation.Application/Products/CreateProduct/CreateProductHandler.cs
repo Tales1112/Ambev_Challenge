@@ -1,6 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Application.Products.ListProduct;
-using Ambev.DeveloperEvaluation.Common.Repositories;
+﻿using Ambev.DeveloperEvaluation.Common.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Exceptions;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Services;
 using AutoMapper;
@@ -23,6 +23,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
         /// Initializes a new instance of CreateProductHandler
         /// </summary>
         /// <param name="productRepository">The product repository</param>
+        /// <param name="ensureCategoryService">The category service</param>
         /// <param name="unitOfWork">Unit of work.</param>
         /// <param name="mapper">The AutoMapper instance</param>
         public CreateProductHandler(
@@ -53,7 +54,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
 
             var existingProduct = await _productRepository.GetByTitleAsync(command.Title, cancellationToken);
             if (existingProduct != null)
-                throw new InvalidOperationException($"Product with title {command.Title} already exists.");
+                throw new DomainException(BusinessRuleMessages.ProductTitleExists(command.Title).Detail);
 
             var product = _mapper.Map<Product>(command);
 
