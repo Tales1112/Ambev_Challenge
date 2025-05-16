@@ -49,11 +49,11 @@ namespace Ambev.DeveloperEvaluation.Application.Products.UpdateProduct
             if (product is null)
                 throw new InvalidOperationException($"Product with id {command.Id} already exists");
 
-            var existingProduct = await _productRepository.GetByNameAsync(command.Name, cancellationToken);
+            var existingProduct = await _productRepository.GetByTitleAsync(command.Title, cancellationToken);
             if (existingProduct is not null && existingProduct.Id != command.Id)
-                throw new InvalidOperationException($"Product with name {command.Name} already exists");
+                throw new InvalidOperationException($"Product with title {command.Title} already exists");
 
-            product.Update(command.Name, command.Price);
+            product.Update(command.Title, command.Price, command.Description, command.Image, command.Rating);
 
             await _unitOfWork.ApplyChangesAsync(cancellationToken);
             return _mapper.Map<UpdateProductResult>(product);

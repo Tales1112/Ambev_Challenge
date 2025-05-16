@@ -45,10 +45,10 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<Product?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+        public async Task<Product?> GetByTitleAsync(string name, CancellationToken cancellationToken = default)
         {
             return await _context.Products
-                .FirstOrDefaultAsync(u => u.Name == name, cancellationToken);
+                .FirstOrDefaultAsync(u => u.Title == name, cancellationToken);
         }
 
         /// <inheritdoc/>

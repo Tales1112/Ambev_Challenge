@@ -32,10 +32,10 @@ namespace Ambev.DeveloperEvaluation.Domain.Repositories
         /// <summary>
         /// Retrieves a product by their name.
         /// </summary>
-        /// <param name="name">The name to search for</param>
+        /// <param name="title">The title to search for</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The product if found, null otherwise</returns>
-        Task<Product?> GetByNameAsync(string name, CancellationToken cancellationToken = default);
+        Task<Product?> GetByTitleAsync(string title, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieves all paginated products.

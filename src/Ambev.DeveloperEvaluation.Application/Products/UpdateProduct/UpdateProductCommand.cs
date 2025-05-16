@@ -1,4 +1,5 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Validation;
+using Ambev.DeveloperEvaluation.Domain.ValueObjects;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.UpdateProduct
@@ -20,18 +21,34 @@ namespace Ambev.DeveloperEvaluation.Application.Products.UpdateProduct
     public class UpdateProductCommand : IRequest<UpdateProductResult>
     {
         /// <summary>
-        /// The unique identifier of the product to retrieve
+        /// The unique identifier of the product.
         /// </summary>
         public Guid Id { get; set; }
-        /// <summary>
-        /// Gets or sets the name of the product to be updated.
-        /// </summary>
-        public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the price for the product.
+        /// The product's name.
+        /// </summary>
+        public string Title { get; set; } = default!;
+
+        /// <summary>
+        /// Gets the product's description.
+        /// </summary>
+        public string Description { get; set; } = default!;
+
+        /// <summary>
+        /// The product's price.
         /// </summary>
         public decimal Price { get; set; }
+
+        /// <summary>
+        /// Gets the product's cover image.
+        /// </summary>
+        public string Image { get; set; } = default!;
+
+        /// <summary>
+        /// Gets the product's rating.
+        /// </summary>
+        public Rating Rating { get; set; } = default!;
 
         public ValidationResultDetail Validate()
         {
