@@ -20,5 +20,12 @@ namespace Ambev.DeveloperEvaluation.Domain.Repositories
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The category if found, null otherwise</returns>
         Task<Category?> GetByNameAsync(string name, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Retrieves all category names that are being used.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Names of category</returns>
+        Task<ICollection<string>> ListAllCategoriesBeingUsedAsync(CancellationToken cancellationToken);
     }
 }
