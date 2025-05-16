@@ -4,7 +4,6 @@ using AutoMapper;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.SearchPaginatedProductsByCategory
 {
-
     /// <summary>
     /// Profile for mapping between Application and API SearchPaginatedProductsByCategory responses.
     /// </summary>

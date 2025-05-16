@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 
 namespace Ambev.DeveloperEvaluation.Domain.Specifications
 {
-
     /// <summary>
     /// Spec that check SaleItems amount and SaleItems quantity individually
     /// </summary>

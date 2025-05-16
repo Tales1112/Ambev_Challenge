@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+using AutoMapper;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.UpdateCart
 {
@@ -12,7 +13,7 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.UpdateCart
         /// </summary>
         public UpdateCartProfile()
         {
-            //CreateMap<Cart, CartResult>(); // TODO: validar se é necessário.
+            CreateMap<Cart, CartResult>(); // TODO: validar se é necessário.
         }
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Common;
-
 public class PaginatedRequest
 {
     [FromQuery(Name = "_page")]

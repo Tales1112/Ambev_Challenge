@@ -64,7 +64,7 @@ public class CreateCartTest : WebApiTestBase
     /// <summary>
     /// Test when does have carts and get list of them result should be empty.
     /// </summary>
-    [Fact(DisplayName = "Test when does have carts and get list of them result should be empty.")] //, Skip = "Test quebrando por causa dos claims do usuário, vestigar melhor")]
+    [Fact(DisplayName = "Test when does have carts and get list of them result should be empty.")] 
     public async Task Given_Nothing_Carts_When_Try_Get_Cart_Response_Should_Be_NotFound()
     {
         var userId = Guid.NewGuid();

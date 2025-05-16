@@ -3,7 +3,6 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.UpdateCart
 {
-
     /// <summary>
     /// Command for updating a existing cart.
     /// </summary>
