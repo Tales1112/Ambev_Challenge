@@ -40,7 +40,9 @@ namespace Ambev.DeveloperEvaluation.ORM.Extensions
         {
             IOrderedQueryable<T>? orderedQuery = null;
 
-            foreach (var order in orders)
+            var sortsWithoutNavigation = orders.Where(o => !o.Key.Contains('.'));
+
+            foreach (var order in sortsWithoutNavigation)
             {
                 try
                 {
@@ -56,13 +58,14 @@ namespace Ambev.DeveloperEvaluation.ORM.Extensions
                 }
                 catch (ParseException ex)
                 {
-                    throw new ValidationException(new List<ValidationFailure>
-                    {
-                        new(string.Empty, ex.Message)
-                    });
+                    throw new ValidationException(
+                    [
+                        new ValidationFailure(string.Empty, ex.Message),
+                ]);
                 }
             }
-            return orderedQuery is not null ? orderedQuery : queryable;
+
+            return orderedQuery is null ? queryable : orderedQuery;
         }
     }
 }
