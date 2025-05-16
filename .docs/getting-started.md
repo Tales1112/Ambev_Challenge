@@ -22,7 +22,7 @@ git --version
 ### Step 1: Clone the Repository
 Clone the project from GitHub:
 ```bash
-git clone https://github.com/gBritz/abi-gth-omnia-developer-evaluation.git
+git clone https://github.com/Tales1112/Ambev_Challenge.git
 cd abi-gth-omnia-developer-evaluation
 ```
 
