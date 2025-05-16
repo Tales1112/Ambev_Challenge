@@ -17,7 +17,6 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
         /// <list type="bullet">Description: Required, must be between 3 and 300 characters</list>
         /// <list type="bullet">Price: Required, must be greater than zero</list>
         /// <list type="bullet">Image: Required, must be between 3 and 100 characters</list>
-        /// <list type="bullet">Rating: Must be not null</list>
         /// <list type="bullet">Rating: Required, must be not null</list>
         /// <list type="bullet">Category name: Required, must be between 3 and 100 characters</list>
         /// </remarks>
@@ -33,16 +32,22 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
                 .MinimumLength(3).WithMessage("Product image must be at least 3 characters long.")
                 .MaximumLength(100).WithMessage("Product image cannot be longer than 100 characters.");
 
+            RuleFor(product => product.Quantity)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Product quantity must be greater than or equal to 0.");
+
             RuleFor(product => product.Rating)
                 .NotNull();
 
             When(p => p.Rating is not null, () =>
             {
                 RuleFor(p => p.Rating.Rate)
-                    .GreaterThan(0).WithMessage("Product rating must be greater than 0.");
+                    .GreaterThanOrEqualTo(0)
+                    .WithMessage("Product rating must be greater than or equal to 0.");
 
                 RuleFor(p => p.Rating.Count)
-                    .GreaterThan(0).WithMessage("Product rating count must be greater than 0.");
+                    .GreaterThanOrEqualTo(0)
+                    .WithMessage("Product rating count must be greater than or equal to 0.");
             });
         }
     }

@@ -13,7 +13,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct
         public string Title { get; set; } = default!;
 
         /// <summary>
-        /// Gets or sets the price
+        /// Gets the product's full price.
         /// </summary>
         public decimal Price { get; set; }
 
@@ -26,6 +26,11 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct
         /// Gets the product's cover image.
         /// </summary>
         public string Image { get; set; } = default!;
+
+        /// <summary>
+        /// Gets the stock quantity
+        /// </summary>
+        public int Quantity { get; set; }
 
         /// <summary>
         /// Gets the product's rating.

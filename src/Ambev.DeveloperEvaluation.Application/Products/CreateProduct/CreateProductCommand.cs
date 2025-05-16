@@ -1,5 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Application.Products.ListProduct;
-using Ambev.DeveloperEvaluation.Common.Validation;
+﻿using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.ValueObjects;
 using MediatR;
 
@@ -12,7 +11,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
     /// This command is used to capture the required data for creating a product, 
     /// including name and price. 
     /// It implements <see cref="IRequest{TResponse}"/> to initiate the request 
-    /// that returns a <see cref="ProductResult"/>.
+    /// that returns a <see cref="CreateProductResult"/>.
     /// 
     /// The data provided in this command is validated using the 
     /// <see cref="CreateProductValidator"/> which extends 
@@ -40,6 +39,11 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
         /// Gets the product's cover image.
         /// </summary>
         public string Image { get; set; } = default!;
+
+        /// <summary>
+        /// Gets the stock quantity
+        /// </summary>
+        public int Quantity { get; set; }
 
         /// <summary>
         /// Gets the product's rating.

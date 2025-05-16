@@ -10,7 +10,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.UpdateProduct
         /// <summary>
         /// The unique identifier of the product to update.
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
 
         /// <summary>
         /// Gets the product's title. Must be unique and contain only valid characters.
@@ -31,6 +31,11 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.UpdateProduct
         /// Gets the product's cover image.
         /// </summary>
         public string Image { get; set; } = default!;
+
+        /// <summary>
+        /// Gets the stock quantity
+        /// </summary>
+        public int Quantity { get; set; }
 
         /// <summary>
         /// Gets the product's rating.
