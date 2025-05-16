@@ -107,7 +107,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
         }
 
         /// <summary>
-        /// Creates a new product.
+        /// Edit a product.
         /// </summary>
         /// <param name="request">The product creation request</param>
         /// <param name="cancellationToken">Cancellation token</param>
