@@ -1,5 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Application.Products.ListProduct;
-using Ambev.DeveloperEvaluation.Domain.Repositories;
+﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
@@ -48,7 +47,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
             {
                 throw new ValidationException(
                 [
-                    new ValidationFailure(string.Empty, $"Product with ID {request.Id} not found."),
+                    new ValidationFailure(string.Empty, $"Product with ID {request.Id} was not found."),
             ]);
             }
 
