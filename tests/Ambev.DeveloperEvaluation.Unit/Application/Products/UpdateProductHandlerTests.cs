@@ -9,6 +9,7 @@ using Ambev.DeveloperEvaluation.Domain.Services;
 using Ambev.DeveloperEvaluation.Unit.Application.Products.TestData;
 using AutoMapper;
 using FluentAssertions;
+using FluentValidation;
 using NSubstitute;
 using Xunit;
 
