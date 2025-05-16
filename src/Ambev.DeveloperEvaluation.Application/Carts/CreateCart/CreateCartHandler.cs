@@ -7,7 +7,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 
-namespace Ambev.DeveloperEvaluation.Application.Carts
+namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
 {
     /// <summary>
     /// Handler for processing <see cref="CreateCartCommand"/> requests.

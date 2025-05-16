@@ -1,7 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using AutoMapper;
 
-namespace Ambev.DeveloperEvaluation.Application.Carts
+namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
 {
     /// <summary>
     /// Profile for mapping between <see cref="Cart"/> entity and <see cref="CreateCartResult"/>.

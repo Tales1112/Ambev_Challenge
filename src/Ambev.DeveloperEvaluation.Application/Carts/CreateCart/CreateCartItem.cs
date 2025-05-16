@@ -1,4 +1,4 @@
-﻿namespace Ambev.DeveloperEvaluation.Application.Carts
+﻿namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
 {
     /// <summary>
     /// Represents command the item of cart.

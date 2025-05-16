@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.Application.Carts
+namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
 {
     /// <summary>
     /// Validator for <see cref="CreateCartCommand"/> that defines validation rules for cart creation command.

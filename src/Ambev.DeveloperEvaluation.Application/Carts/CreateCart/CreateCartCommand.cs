@@ -1,7 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Validation;
 using MediatR;
 
-namespace Ambev.DeveloperEvaluation.Application.Carts
+namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
 {
 
     /// <summary>
