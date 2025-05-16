@@ -1,4 +1,5 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Repositories;
+using Ambev.DeveloperEvaluation.Common.Security;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
@@ -6,7 +7,6 @@ using Ambev.DeveloperEvaluation.Domain.Services;
 using Ambev.DeveloperEvaluation.Domain.Specifications;
 using AutoMapper;
 using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
@@ -19,9 +19,11 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
         private readonly ICartRepository _cartRepository;
         private readonly IUserRepository _userRepository;
         private readonly IProductRepository _productRepository;
+        private readonly ICurrentUserAccessor _currentUserAccessor;
         private readonly SaleDiscountService _saleDiscountService;
         private readonly SaleRandomNumberGeneratorService _saleNumberGenerator;
         private readonly SaleLimitReachedSpecification _saleLimitReachedSpecification;
+        private readonly IEventNotification _eventNotifier;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
@@ -31,27 +33,33 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
         /// <param name="cartRepository">The cart repository</param>
         /// <param name="userRepository">The user repository</param>
         /// <param name="productRepository">The product repository</param>
+        /// <param name="currentUserAccessor">Accessor to current user of system</param>
         /// <param name="saleDiscountService">Service to apply discounts</param>
         /// <param name="saleNumberGenerator">Service to generate sale number</param>
         /// <param name="saleLimitReachedSpecification">Specification to validate if sale limit was reached</param>
+        /// <param name="eventNotifier">Notifier of events</param>
         /// <param name="unitOfWork">Unit of work.</param>
         /// <param name="mapper">The AutoMapper instance</param>
         public CreateCartHandler(
             ICartRepository cartRepository,
             IUserRepository userRepository,
             IProductRepository productRepository,
+            ICurrentUserAccessor currentUserAccessor,
             SaleDiscountService saleDiscountService,
             SaleRandomNumberGeneratorService saleNumberGenerator,
             SaleLimitReachedSpecification saleLimitReachedSpecification,
+            IEventNotification eventNotifier,
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
             _cartRepository = cartRepository;
             _userRepository = userRepository;
             _productRepository = productRepository;
+            _currentUserAccessor = currentUserAccessor;
             _saleDiscountService = saleDiscountService;
             _saleNumberGenerator = saleNumberGenerator;
             _saleLimitReachedSpecification = saleLimitReachedSpecification;
+            _eventNotifier = eventNotifier;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -70,22 +78,17 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
 
-            var loggedUser = await _userRepository.GetByIdAsync(new Guid("c2a03e75-c2e6-40d0-a2f5-105e9610bde6"), cancellationToken);
-            if (loggedUser is null || loggedUser.Status is not UserStatus.Active)
+            var currentUserInfo = _currentUserAccessor.GetCurrentUser();
+            var currentUser = await _userRepository.GetByIdAsync(currentUserInfo.Id, cancellationToken);
+            if (currentUser is null || currentUser.Status is not UserStatus.Active)
             {
-                throw new ValidationException(
-                [
-                    new ValidationFailure(nameof(command.UserId), "Not found user."),
-            ]);
+                throw new NotFoundDomainException(BusinessRuleMessages.UserNotFound(currentUserInfo.Id));
             }
 
             var customerUser = await _userRepository.GetByIdAsync(command.UserId, cancellationToken);
             if (customerUser is null || customerUser.Status is not UserStatus.Active)
             {
-                throw new ValidationException(
-                [
-                    new ValidationFailure(nameof(command.UserId), "Not found user."),
-            ]);
+                throw new NotFoundDomainException(BusinessRuleMessages.UserNotFound(command.UserId));
             }
 
             Cart cart = new()
@@ -93,17 +96,17 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
                 SaleNumber = _saleNumberGenerator.GenerateNext(),
                 SoldAt = command.Date,
                 StoreName = command.Branch,
-                CreatedBy = loggedUser,
+                CreatedBy = currentUser,
                 BoughtBy = customerUser,
             };
 
-            var cartItems = await CreateItemsAsync(command, loggedUser, cancellationToken);
+            var cartItems = await CreateItemsAsync(command, currentUser, cancellationToken);
 
             cart.AddItems(cartItems.ToArray());
 
             if (_saleLimitReachedSpecification.IsSatisfiedBy(cart))
             {
-                throw new DomainException("Cannot sell more than 20 items per product.");
+                throw new DomainException(BusinessRuleMessages.ProductSaleLimitReached(_saleLimitReachedSpecification.MaximumItemsPerProduct).Detail);
             }
 
             _saleDiscountService.ApplyDiscounts(cart);
@@ -112,22 +115,21 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
 
             await _unitOfWork.ApplyChangesAsync(cancellationToken);
 
+            await _eventNotifier.NotifyAsync(SaleCreatedEvent.CreateFrom(cart));
+
             return _mapper.Map<CartResult>(cart);
         }
 
-        private async Task<IEnumerable<CartItem>> CreateItemsAsync(
-            CreateCartCommand command,
-            User loggedUser,
-            CancellationToken cancellationToken)
+        private async Task<IEnumerable<CartItem>> CreateItemsAsync(CreateCartCommand command, User loggedUser, CancellationToken cancellationToken)
         {
             command.Products = command.Products
-                .GroupBy(p => p.ProductId)
-                .Select(g => new CreateCartItem
-                {
-                    ProductId = g.Key,
-                    Quantity = g.Sum(_ => _.Quantity),
-                })
-                .ToArray();
+                                    .GroupBy(p => p.ProductId)
+                                    .Select(g => new CreateCartItem
+                                    {
+                                        ProductId = g.Key,
+                                        Quantity = g.Sum(_ => _.Quantity),
+                                    })
+                                    .ToArray();
 
             var productIds = command.Products.Select(p => p.ProductId).ToArray();
             ICollection<Product> products = await _productRepository.ListByIdsAsync(productIds, cancellationToken);
@@ -135,14 +137,9 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
             if (products.Count != productIds.Length)
             {
                 var missingProductIds = productIds
-                    .Where(id => !products.Any(p => p.Id == id))
-                    .Select(id => id.ToString())
-                    .Aggregate((id1, id2) => $"#{id1}, #{id2}");
+                    .Where(id => !products.Any(p => p.Id == id));
 
-                throw new ValidationException(
-                [
-                    new ValidationFailure(nameof(CreateCartItem.ProductId), $"Not found products: {missingProductIds}"),
-            ]);
+                throw new NotFoundDomainException(BusinessRuleMessages.ProductsNotFound(missingProductIds));
             }
 
             return
