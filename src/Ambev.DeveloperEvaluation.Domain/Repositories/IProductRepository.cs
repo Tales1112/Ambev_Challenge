@@ -40,9 +40,18 @@ namespace Ambev.DeveloperEvaluation.Domain.Repositories
         /// <summary>
         /// Retrieves all paginated products.
         /// </summary>
-        /// <param name="query">Query to paginate</param>
+        /// <param name="paging">Info to paginate</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The list of paginated products</returns>
-        Task<PaginationQueryResult<Product>> PaginateAsync(PaginationQuery query,CancellationToken cancellationToken = default);
+        Task<PaginationQueryResult<Product>> PaginateAsync(PaginationQuery paging, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Retrieves all paginated products searched by category name.
+        /// </summary>
+        /// <param name="categoryName"></param>
+        /// <param name="paging">Info to paginate</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<PaginationQueryResult<Product>> SearchPaginatedByCategoryNameAsync(string categoryName, PaginationQuery paging, CancellationToken cancellationToken);
     }
 }
