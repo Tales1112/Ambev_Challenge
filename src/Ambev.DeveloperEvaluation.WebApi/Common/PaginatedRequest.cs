@@ -1,4 +1,6 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Repositories;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -41,7 +43,10 @@ public class PaginatedRequest
         {
             "asc" => SortDirection.Ascending,
             "desc" => SortDirection.Descending,
-            _ => SortDirection.Ascending,
+            _ => throw new ValidationException(
+                [
+                    new ValidationFailure(string.Empty, $"Invalid direction '{direction}' in ordering, accepted asc or desc."),
+                ])
         };
     }
 }

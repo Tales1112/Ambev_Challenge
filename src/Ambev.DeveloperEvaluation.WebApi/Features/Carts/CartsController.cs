@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Application.Carts.CreateCart;
+﻿using Ambev.DeveloperEvaluation.Application.Carts.CancelCart;
+using Ambev.DeveloperEvaluation.Application.Carts.CreateCart;
 using Ambev.DeveloperEvaluation.Application.Carts.DeleteCart;
 using Ambev.DeveloperEvaluation.Application.Carts.GetCart;
 using Ambev.DeveloperEvaluation.Application.Carts.PaginateCarts;
