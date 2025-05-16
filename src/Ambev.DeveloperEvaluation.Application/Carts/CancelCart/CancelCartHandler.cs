@@ -1,5 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Repositories;
 using Ambev.DeveloperEvaluation.Common.Security;
+using Ambev.DeveloperEvaluation.Domain.Enums;
+using Ambev.DeveloperEvaluation.Domain.Events;
 using Ambev.DeveloperEvaluation.Domain.Exceptions;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using FluentValidation;
@@ -15,6 +17,7 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CancelCart
         private readonly ICurrentUserAccessor _currentUserAccessor;
         private readonly ICartRepository _cartRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IEventNotification _eventNotifier;
         private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
@@ -23,16 +26,19 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CancelCart
         /// <param name="currentUserAccessor">Accessor to current user of system</param>
         /// <param name="cartRepository">The cart repository</param>
         /// <param name="userRepository">The user repository</param>
+        /// <param name="eventNotifier">Notifier of events</param>
         /// <param name="unitOfWork">Unit of work</param>
         public CancelCartHandler(
             ICurrentUserAccessor currentUserAccessor,
             ICartRepository cartRepository,
             IUserRepository userRepository,
+            IEventNotification eventNotifier,
             IUnitOfWork unitOfWork)
         {
             _currentUserAccessor = currentUserAccessor;
             _cartRepository = cartRepository;
             _userRepository = userRepository;
+            _eventNotifier = eventNotifier;
             _unitOfWork = unitOfWork;
         }
 
@@ -65,6 +71,8 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CancelCart
             cart.Cancel(currentUser);
 
             await _unitOfWork.ApplyChangesAsync(cancellationToken);
+
+            await _eventNotifier.NotifyAsync(SaleCancelledEvent.CreateFrom(cart));
 
             return new CancelCartResponse { Success = true };
         }
