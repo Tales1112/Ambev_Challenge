@@ -3,7 +3,6 @@ using Ambev.DeveloperEvaluation.Domain.Enums;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
-
     /// <summary>
     /// Represents a cart in the system.
     /// <para>(A cart is also known as a shopping cart or basket.)</para>
@@ -63,6 +62,11 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         public DateTime? CancelledAt { get; private set; }
 
         /// <summary>
+        /// Gets the date and time when was deleted the cart.
+        /// </summary>
+        public DateTime? DeletedAt { get; private set; }
+
+        /// <summary>
         /// Gets a identifier of user who bought.
         /// </summary>
         public Guid BoughtById { get; private set; }
@@ -83,9 +87,36 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         public virtual User? CancelledBy { get; set; }
 
         /// <summary>
+        /// Gets a user who deleted the cart.
+        /// </summary>
+        public virtual User? DeletedBy { get; set; }
+
+        /// <summary>
         /// Gets a product items of cart.
         /// </summary>
         public virtual ICollection<CartItem> Items { get; private set; } = new List<CartItem>();
+
+        /// <summary>
+        /// Gets list of active items.
+        /// </summary>
+        public IEnumerable<CartItem> ActiveItems =>
+            Items.Where(i => i.PurchaseStatus is not PurchaseStatus.Deleted);
+
+        /// <summary>
+        /// Indicates if can be cancel cart.
+        /// </summary>
+        public bool CanBeCancel => PurchaseStatus is not PurchaseStatus.Cancelled;
+
+        /// <summary>
+        /// Indicates if can be edited.
+        /// </summary>
+        public bool CanBeEdited => PurchaseStatus is not PurchaseStatus.Cancelled;
+
+        /// <summary>
+        /// Indicates if has any deleted item.
+        /// </summary>
+        public bool HasAnyDeletedItem =>
+            Items.Any(i => i.PurchaseStatus is PurchaseStatus.Deleted);
 
         /// <summary>
         /// Adding new product item and quantity to the cart.
@@ -105,12 +136,17 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         }
 
         /// <summary>
-        /// Cancellation a cart.
+        /// Cancel the cart.
         /// </summary>
         /// <param name="cancelledBy">User who cancelled the cart.</param>
         public void Cancel(User cancelledBy)
         {
             ArgumentNullException.ThrowIfNull(cancelledBy, nameof(cancelledBy));
+
+            foreach (var item in Items)
+            {
+                item.Cancel(cancelledBy);
+            }
 
             PurchaseStatus = PurchaseStatus.Cancelled;
             CancelledAt = DateTime.UtcNow;
@@ -139,42 +175,62 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         }
 
         /// <summary>
+        /// Delete the cart.
+        /// </summary>
+        /// <param name="deletedBy">User who deleted the cart.</param>
+        public void Delete(User deletedBy)
+        {
+            ArgumentNullException.ThrowIfNull(deletedBy, nameof(deletedBy));
+
+            Cancel(deletedBy);
+
+            PurchaseStatus = PurchaseStatus.Deleted;
+            DeletedAt = DateTime.UtcNow;
+            DeletedBy = deletedBy;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        /// <summary>
         /// Calculate total amount.
         /// Called when change product in item of cart.
         /// </summary>
         public void RefreshTotalAmount()
         {
-            TotalSaleAmount = Items.Sum(i => i.TotalAmount);
+            TotalSaleAmount = Items
+                .Where(i => i.PurchaseStatus is PurchaseStatus.Created)
+                .Sum(i => i.TotalAmount);
         }
 
         /// <summary>
         /// Remove items.
-        /// </summary>
+        /// </summary
+        /// <param name="deletedBy">User that removed the items.</param>
         /// <param name="items">Items to remove</param>
-        public void RemoveItems(params CartItem[] items)
+        public void DeleteItems(User deletedBy, params CartItem[] items)
         {
+            ArgumentNullException.ThrowIfNull(deletedBy, nameof(deletedBy));
             ArgumentNullException.ThrowIfNull(items, nameof(items));
 
             foreach (var item in items)
             {
-                item.Product.IncreaseQuantity(item.Quantity);
-                Items.Remove(Items.First(i => i.ProductId == item.ProductId));
+                item.Delete(deletedBy);
             }
 
             RefreshTotalAmount();
         }
 
         /// <summary>
-        /// Update quantity of item.
+        /// Change quantity of item.
         /// </summary>
         /// <param name="items">Items to update the quantity.</param>
-        public void UpdateItems(params CartItem[] items)
+        public void ChangeQuantities(params CartItem[] items)
         {
             ArgumentNullException.ThrowIfNull(items, nameof(items));
 
             var joinedCartItems =
                 from pi in items
                 join ci in Items on pi.ProductId equals ci.ProductId
+                where ci.PurchaseStatus is PurchaseStatus.Created
                 select new
                 {
                     ParameterCartItem = pi,
@@ -183,17 +239,6 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
 
             foreach (var joined in joinedCartItems)
             {
-                if (joined.ParameterCartItem.Quantity < joined.CurrentCartItem.Quantity)
-                {
-                    var giveBackQuantity = joined.CurrentCartItem.Quantity - joined.ParameterCartItem.Quantity;
-                    joined.ParameterCartItem.Product.IncreaseQuantity(giveBackQuantity);
-                }
-                else if (joined.ParameterCartItem.Quantity > joined.CurrentCartItem.Quantity)
-                {
-                    var buyMoreQuantity = joined.ParameterCartItem.Quantity - joined.CurrentCartItem.Quantity;
-                    joined.ParameterCartItem.Product.DecreaseQuantity(buyMoreQuantity);
-                }
-
                 joined.CurrentCartItem.ChangeQuantity(joined.ParameterCartItem.Quantity);
             }
 
